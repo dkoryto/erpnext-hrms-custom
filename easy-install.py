@@ -79,11 +79,14 @@ def write_to_env(
 	admin_pass: str,
 	email: str,
 	erpnext_version: str = None,
+	image: str = None
 ) -> None:
 	quoted_sites = ",".join([f"`{site}`" for site in sites]).strip(",")
 	example_env = get_from_env(wd, "example.env")
-	erpnext_version = erpnext_version or example_env["ERPNEXT_VERSION"]
 	with open(os.path.join(wd, ".env"), "w") as f:
+		if not image:  # Dodaj ERPNEXT_VERSION tylko jeśli image nie jest ustawione
+			erpnext_version = erpnext_version or example_env["ERPNEXT_VERSION"]
+			f.write(f"ERPNEXT_VERSION={erpnext_version}\n")
 		f.writelines(
 			[
 				f"ERPNEXT_VERSION={erpnext_version}\n",  # defaults to latest version of ERPNext
